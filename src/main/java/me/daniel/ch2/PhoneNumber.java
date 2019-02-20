@@ -1,6 +1,8 @@
 package me.daniel.ch2;
 
-public final class PhoneNumber implements Cloneable {
+import java.util.Comparator;
+
+public final class PhoneNumber implements Cloneable, Comparable<PhoneNumber> {
     private final short areaCode, prefix, lineNum;
 
     public PhoneNumber(short areaCode, short prefix, short lineNum) {
@@ -73,4 +75,20 @@ public final class PhoneNumber implements Cloneable {
             throw new AssertionError();
         }
     }
+
+    @Override
+    public int compareTo(PhoneNumber o) {
+        int result = Short.compare(areaCode, o.areaCode);
+        if (result == 0) {
+            result = Short.compare(prefix, o.prefix);
+            if (result == 0) {
+                result = Short.compare(lineNum, o.lineNum);
+            }
+        }
+        return result;
+    }
+
+    private static final Comparator<PhoneNumber> COMPARATOR = Comparator.comparingInt((PhoneNumber value) -> value.areaCode)
+                                        .thenComparingInt((PhoneNumber value) -> value.prefix)
+                                        .thenComparingInt((PhoneNumber value) -> value.lineNum);
 }
